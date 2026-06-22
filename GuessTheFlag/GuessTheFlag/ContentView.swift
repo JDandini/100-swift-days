@@ -9,16 +9,40 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showAlert = false
+    private var countries = [
+        "Estonia",
+        "France",
+        "Germany",
+        "Ireland",
+        "Italy",
+        "Nigeria",
+        "Poland",
+        "Spain",
+        "UK",
+        "Ukraine",
+        "US"
+    ]
+    private var correctAnswer = Int.random(in: 0...2)
+    
     var body: some View {
-        Button("Show alert") {
-            showAlert = true
-        }.alert("Important message", isPresented: $showAlert) {
-            Button("OK") {
-                showAlert = false
+        ZStack {
+            Color.teal
+                .ignoresSafeArea()
+            VStack {
+                Text("Tap the flag of")
+                    .foregroundStyle(.white)
+                Text(countries[correctAnswer])
+                    .foregroundStyle(.white)
+                ForEach(0 ..< 2) { number in
+                    Button {
+                        //action
+                    } label: {
+                        Image(countries[number])
+                    }
+                }
             }
-        } message: {
-            Text("Please read this message")
         }
+        
     }
     
     private func executeDelete() {
