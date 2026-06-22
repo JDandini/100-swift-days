@@ -26,6 +26,8 @@ struct ContentView: View {
     ].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
     @State private var scoreValue: Int = 0
+    @State private var roundsPlayed: Int = 0
+    @State private var showingGameOver = false
     
     var body: some View {
         ZStack {
@@ -73,9 +75,21 @@ struct ContentView: View {
             }
             .padding()
         }.alert(scoreTitle, isPresented: $showingScore) {
-            Button("Continue", action: askQuestion)
+            Button("Continue") {
+                roundsPlayed += 1
+                if roundsPlayed >= 8 {
+                    showingGameOver = true
+                } else {
+                    askQuestion()
+                }
+            }
         } message: {
             Text(alertBody)
+        }
+        .alert("Game over", isPresented: $showingGameOver) {
+            Button("Restart", action: resetGame)
+        } message: {
+            Text("Final score: \(scoreValue)/8")
         }
         
     }
@@ -96,6 +110,12 @@ struct ContentView: View {
     private func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+    }
+    
+    private func resetGame() {
+        scoreValue = 0
+        roundsPlayed = 0
+        askQuestion()
     }
 }
 
