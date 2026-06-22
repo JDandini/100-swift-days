@@ -9,14 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Button {
-            print("Button tapped")
-        } label: {
-            Text("Tap me!")
-                .padding()
-                .foregroundStyle(.white)
-                .background(.teal)
-        }
+        Image(decorative: "Spain")
     }
     
     private func executeDelete() {
