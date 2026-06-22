@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
+    @State private var alertBody = ""
     @State private var countries = [
         "Estonia",
         "France",
@@ -74,7 +75,7 @@ struct ContentView: View {
         }.alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
-            Text("Your score is \(scoreValue)")
+            Text(alertBody)
         }
         
     }
@@ -83,8 +84,11 @@ struct ContentView: View {
         if number == correctAnswer {
             scoreTitle = "Correct"
             scoreValue += 1
+            alertBody = "Score: \(scoreValue)"
         } else {
             scoreTitle = "Wrong"
+            let selectedName = countries[number]
+            alertBody = "That's the flag of \(selectedName). Try again!"
         }
         showingScore = true
     }
