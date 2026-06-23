@@ -12,26 +12,52 @@ struct ContentView: View {
    private let motto2 = Text("nunquam titillandus")
     
     var body: some View {
-        VStack(spacing: 10) {
-            CapsuleText(text: "First")
+        VStack {
+            Text("Hello world!")
+                .titleStyle()
+            
+            Color.blue
+                .frame(width: 300, height: 200)
+                .watermarked(with: "Hacking with Swift")
+        }
+        .padding()
+    }
+}
+
+struct Title: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .foregroundStyle(.white)
+            .padding()
+            .background(.blue)
+            .clipShape(.rect(cornerRadius: 10))
+    }
+}
+
+struct Watermark: ViewModifier {
+    var text: String
+
+    func body(content: Content) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            content
+            Text(text)
+                .font(.caption)
                 .foregroundStyle(.white)
-            CapsuleText(text: "Second")
-                .foregroundStyle(.yellow)
+                .padding(5)
+                .background(.black)
         }
     }
 }
 
-struct CapsuleText: View {
-    var text: String
-    var body: some View {
-        Text(text)
-            .font(.largeTitle)
-            .padding()
-            .background(.blue)
-            .clipShape(.capsule)
+extension View {
+    func titleStyle() -> some View {
+        self.modifier(Title())
+    }
+    func watermarked(with text: String) -> some View {
+           modifier(Watermark(text: text))
     }
 }
-
 #Preview {
     ContentView()
 }
