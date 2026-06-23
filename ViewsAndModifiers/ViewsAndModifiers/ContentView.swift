@@ -14,6 +14,8 @@ struct GridStack<Content: View>: View {
     
     var body: some View {
         VStack {
+            Text("Blue large title")
+                .blueTitle()
             ForEach(0 ..< rows, id: \.self) { row in
                 HStack {
                     ForEach(0 ..< columns, id: \.self) { column in
@@ -33,6 +35,22 @@ struct ContentView: View {
         }
     }
 }
+
+struct LargeBlueTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .foregroundStyle(.blue)
+    }
+}
+
+extension View {
+    func blueTitle() -> some View {
+        self.modifier(LargeBlueTitle())
+    }
+}
+
+
 #Preview {
     ContentView()
 }
