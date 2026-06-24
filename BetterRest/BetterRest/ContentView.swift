@@ -53,11 +53,11 @@ struct ContentView: View {
                 }
                 
                 Section {
-                    Stepper(
-                        "^[\(coffeeAmount) cup](inflect: true)",
-                        value: $coffeeAmount,
-                        in: 0...20,
-                    )
+                    Picker("Coffe intake", selection: $coffeeAmount) {
+                        ForEach(0 ..< 21) {
+                            Text( "^[\($0) cup](inflect: true)")
+                        }
+                    }
                 } header: {
                     Text("Daily coffee intake")
                         .font(.headline)
