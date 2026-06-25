@@ -8,17 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
-    let people = ["Finn", "Leia", "Luke", "Rey"]
     var body: some View {
-        List {
-            Text("Static Row")
-            
-            ForEach(people, id: \.self) {
-                Text($0)
-            }
-            
-            Text("Static Row")
+        VStack {
+            Image(systemName: "globe")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Hello, world!")
         }
+        .padding()
+    }
+    
+    func testBundles() {
+        guard let fileURL = Bundle.main.url(forResource: "words", withExtension: "txt"),
+        let fileContents = try? String(contentsOf: fileURL, encoding: .utf8) else {
+            print("nothing happens")
+            return
+        }
+        print(fileContents)
     }
 }
 
