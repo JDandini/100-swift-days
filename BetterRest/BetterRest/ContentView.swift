@@ -62,18 +62,26 @@ struct ContentView: View {
                     Text("Daily coffee intake")
                         .font(.headline)
                 }
-
+                
+                Section {
+                    HStack {
+                        Spacer()
+                        Text(alertMessage)
+                            .largeTitle()
+                        Spacer()
+                    }
+                        
+                } header: {
+                    Text("Recommended bedtime")
+                        .font(.headline)
+                }
             }
             .navigationTitle("Better Sleep")
-            .toolbar {
-                Button("Calculate", action: calculateBedTime)
-            }
-            .alert(alertTitle, isPresented: $showAlert) {
-                Button("OK"){}
-            } message: {
-                Text(alertMessage)
-            }
         }
+        .onAppear(perform: calculateBedTime)
+        .onChange(of: wakeUp, calculateBedTime)
+        .onChange(of: sleepAmount, calculateBedTime)
+        .onChange(of: coffeeAmount, calculateBedTime)
        
     }
     
@@ -109,6 +117,24 @@ struct ContentView: View {
         let hour = Double(components.hour ?? 0) * 60 * 60
         let minute = Double(components.minute ?? 0) * 60
         return hour + minute
+    }
+}
+
+struct LargeTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .foregroundStyle(.white)
+            .padding()
+            .background(.teal)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+extension View {
+    func largeTitle() -> some View {
+        self.modifier(LargeTitle())
     }
 }
 
