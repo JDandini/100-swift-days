@@ -15,12 +15,29 @@ struct ContentView: View {
             animationAmount += 1
         }
         .padding(50)
-        .background(.red)
+        .background(.teal)
         .foregroundStyle(.white)
         .clipShape(.circle)
         .scaleEffect(animationAmount)
-        .blur(radius: (animationAmount - 1) * 3)
-        .animation(.default, value: animationAmount)
+        .overlay(
+            Circle()
+                .stroke(.red)
+                .scaleEffect(animationAmount)
+                .opacity(2 - animationAmount)
+                .animation(
+                    .easeOut(duration: 1)
+                    .repeatForever(autoreverses: false),
+                    value: animationAmount
+                )
+        )
+        .animation(
+            .easeInOut(duration: 1)
+                .repeatForever(autoreverses: true),
+            value: animationAmount
+        )
+        .onAppear {
+            animationAmount = 2
+        }
 
     }
 }
