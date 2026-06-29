@@ -65,6 +65,7 @@ struct ContentView: View {
                                 .degrees(rotationAngles[number]),
                                 axis: (x: 0, y: 1, z: 0)
                             )
+                            .opacity(tappedFlag == nil || tappedFlag == number ? 1.0 : 0.25)
                         }
                     }
                 }
@@ -101,6 +102,7 @@ struct ContentView: View {
     private func flagTapped(_ number: Int) {
         withAnimation(.linear(duration: 0.6)) {
             rotationAngles[number] += 360
+            tappedFlag = number
         }
         if number == correctAnswer {
             scoreTitle = "Correct"
@@ -117,6 +119,7 @@ struct ContentView: View {
     }
     
     private func askQuestion() {
+        tappedFlag = nil
         rotationAngles = [0, 0, 0]
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
