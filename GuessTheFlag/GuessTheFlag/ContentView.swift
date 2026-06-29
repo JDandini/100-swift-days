@@ -66,6 +66,7 @@ struct ContentView: View {
                                 axis: (x: 0, y: 1, z: 0)
                             )
                             .opacity(tappedFlag == nil || tappedFlag == number ? 1.0 : 0.25)
+                            .scaleEffect(tappedFlag == nil || tappedFlag == number ? 1.0 : 0.75)
                         }
                     }
                 }
@@ -100,7 +101,7 @@ struct ContentView: View {
     }
     
     private func flagTapped(_ number: Int) {
-        withAnimation(.linear(duration: 0.6)) {
+        withAnimation(.linear(duration: 0.3)) {
             rotationAngles[number] += 360
             tappedFlag = number
         }
@@ -113,7 +114,7 @@ struct ContentView: View {
             let selectedName = countries[number]
             alertBody = "That's the flag of \(selectedName). Try again!"
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             showingScore = true
         }
     }
