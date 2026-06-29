@@ -28,7 +28,9 @@ struct ContentView: View {
     @State private var scoreValue: Int = 0
     @State private var roundsPlayed: Int = 0
     @State private var showingGameOver = false
-    
+    @State private var tappedFlag: Int? = nil
+    @State private var rotationAngles: [Double] = [0, 0, 0]
+
     var body: some View {
         ZStack {
             RadialGradient(
@@ -59,6 +61,10 @@ struct ContentView: View {
                             } label: {
                                 FlagImage(flagName: countries[number])
                             }
+                            .rotation3DEffect(
+                                .degrees(rotationAngles[number]),
+                                axis: (x: 0, y: 1, z: 0)
+                            )
                         }
                     }
                 }
@@ -93,6 +99,9 @@ struct ContentView: View {
     }
     
     private func flagTapped(_ number: Int) {
+        withAnimation(.linear(duration: 0.6)) {
+            rotationAngles[number] += 360
+        }
         if number == correctAnswer {
             scoreTitle = "Correct"
             scoreValue += 1
@@ -102,10 +111,13 @@ struct ContentView: View {
             let selectedName = countries[number]
             alertBody = "That's the flag of \(selectedName). Try again!"
         }
-        showingScore = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            showingScore = true
+        }
     }
     
     private func askQuestion() {
+        rotationAngles = [0, 0, 0]
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
