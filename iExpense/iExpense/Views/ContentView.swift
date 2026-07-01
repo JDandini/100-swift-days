@@ -8,12 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
-    @AppStorage("tapCount") private var tapCount = 0
-    
+    @State private var showingAddExpense = false
+    @State private var expenses = Expenses()
+
     var body: some View {
-        Button("Tap count: \(tapCount)") {
-            tapCount += 1
+        NavigationStack {
+            List {
+                ForEach(expenses.items) { item in
+                    Text(item.name)
+                }
+                .onDelete(perform: removeItems)
+            }
+            .navigationTitle("iExpense")
+            .toolbar {
+                Button("Add Expense", systemImage: "plus") {
+                    showingAddExpense = true
+                }
+            }
         }
+        .sheet(isPresented: $showingAddExpense) {
+            AddExpenseView(expenses: expenses)
+        }
+    }
+
+    func removeItems(at offsets: IndexSet) {
+        expenses.items.remove(atOffsets: offsets)
     }
 }
 
