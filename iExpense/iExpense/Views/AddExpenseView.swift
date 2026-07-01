@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddExpenseView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var name = ""
     @State private var type = "Personal"
     @State private var amount: Double = 0.0
@@ -44,6 +45,7 @@ struct AddExpenseView: View {
         guard !name.isEmpty, amount > 0 else { return }
         let expense = ExpenseItem(name: name, type: type, amount: amount)
         expenses.items.append(expense)
+        dismiss()
     }
 }
 
