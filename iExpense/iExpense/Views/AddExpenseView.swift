@@ -35,6 +35,7 @@ struct AddExpenseView: View {
                     format: .currency(code: currencyCode)
                 )
                 .keyboardType(.decimalPad)
+                .foregroundStyle(getAmountColor())
             }
             .navigationTitle("Add new expense")
             .toolbar {
@@ -56,6 +57,17 @@ struct AddExpenseView: View {
         let expense = ExpenseItem(name: name, type: type, amount: amount)
         expenses.items.append(expense)
         dismiss()
+    }
+
+    private func getAmountColor() -> Color {
+        if amount >= 0 && amount < 10 {
+            return .teal
+        } else if amount >= 10 && amount < 100 {
+            return .yellow
+        } else {
+            return .red
+        }
+
     }
 }
 
