@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var showingAddExpense = false
     @State private var expenses = Expenses()
+    private let currencyCode = Locale.current.currency?.identifier ?? "USD"
 
     var body: some View {
         NavigationStack {
@@ -23,7 +24,10 @@ struct ContentView: View {
                             }
 
                             Spacer()
-                            Text(item.amount, format: .currency(code: "USD"))
+                            Text(
+                                item.amount,
+                                format: .currency(code: currencyCode)
+                            )
                         }
                 }
                 .onDelete(perform: removeItems)

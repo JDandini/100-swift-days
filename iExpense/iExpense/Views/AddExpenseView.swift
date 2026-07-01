@@ -16,6 +16,7 @@ struct AddExpenseView: View {
 
     let types = ["Business", "Personal"]
     var expenses: Expenses
+    private let currencyCode = Locale.current.currency?.identifier ?? "USD"
 
     var body: some View {
         NavigationStack {
@@ -31,7 +32,7 @@ struct AddExpenseView: View {
                 TextField(
                     "Amount",
                     value: $amount,
-                    format: .currency(code: "USD")
+                    format: .currency(code: currencyCode)
                 )
                 .keyboardType(.decimalPad)
             }
