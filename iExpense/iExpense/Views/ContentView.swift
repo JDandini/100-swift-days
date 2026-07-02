@@ -15,24 +15,18 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(expenses.items) { item in
-                    HStack {
-                            VStack(alignment: .leading) {
-                                Text(item.name)
-                                    .font(.headline)
-                                Text(item.type)
-                            }
-
-                            Spacer()
-                            Text(
-                                item.amount,
-                                format: .currency(code: currencyCode)
-                            )
-                            .foregroundStyle(getAmountColor(for: item.amount))
-                            .font(fontForAmount(item.amount))
-                        }
+                Section("Personal") {
+                    ForEach(expenses.personalItems) { item in
+                        ExpenseRowView(item: item)
+                    }
+                    .onDelete(perform: removeItems)
                 }
-                .onDelete(perform: removeItems)
+                Section("Business") {
+                    ForEach(expenses.businessItems) { item in
+                        ExpenseRowView(item: item)
+                    }
+                    .onDelete(perform: removeItems)
+                }
             }
             .navigationTitle("iExpense")
             .toolbar {
@@ -48,24 +42,6 @@ struct ContentView: View {
 
     func removeItems(at offsets: IndexSet) {
         expenses.items.remove(atOffsets: offsets)
-    }
-
-    private func getAmountColor(for amount: Double) -> Color {
-        if amount >= 0 && amount < 10 {
-            return .teal
-        } else if amount >= 10 && amount < 100 {
-            return .yellow
-        } else {
-            return .red
-        }
-    }
-
-    private func fontForAmount(_ amount: Double) -> Font {
-        if amount >= 0 && amount < 15 {
-            return .body
-        } else {
-            return .headline
-        }
     }
 }
 
