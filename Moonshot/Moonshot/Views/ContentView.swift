@@ -8,31 +8,42 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    let missions: [Mission] = Bundle.main.decode("missions.json")
-    let columns = [
-        GridItem(.adaptive(minimum: 150))
-    ]
+    @State private var showAsGrid: Bool = true
+    private let missions: [Mission] = Bundle.main.decode("missions.json")
+
+    @ViewBuilder
+    private var missionsView: some View {
+        if showAsGrid {
+            MissionsGrid(missions: missions)
+        } else {
+            MissionsList(missions: missions)
+        }
+    }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns) {
-                    ForEach(missions) { mission in
-                        NavigationLink {
-                            MissionView(mission: mission)
-                        } label: {
-                            MissionGridTile(mission: mission)
-                        }
+            missionsView
+                .toolbar {
+                    Button {
+                        showAsGrid.toggle()
+                    } label: {
+                        Image(systemName: getIconName())
                     }
                 }
-                .padding([.horizontal, .bottom])
-            }
-            .navigationTitle("Moonshot")
-            .background(.darkBackground)
-            .preferredColorScheme(.dark)
+                .navigationTitle("Moonshot")
+                .background(.darkBackground)
+                .preferredColorScheme(.dark)
         }
     }
+
+    private func getIconName() -> String {
+        guard showAsGrid else {
+            return "square.grid.2x2"
+        }
+        return "list.bullet"
+    }
+
+
 }
 
 #Preview {

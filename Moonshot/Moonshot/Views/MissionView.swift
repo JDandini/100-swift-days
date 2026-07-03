@@ -18,7 +18,10 @@ struct MissionView: View {
                     .containerRelativeFrame(.horizontal) { width, _ in
                         width * 0.6
                     }
-                    .padding(.top)
+                    .padding(.vertical)
+                Text(mission.formattedLaunchDate)
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.5))
                 VStack(alignment: .leading) {
                     LineSeparator()
 
@@ -57,6 +60,6 @@ struct MissionView: View {
 
 #Preview {
     let missions: [Mission] = Bundle.main.decode("missions.json")
-    MissionView(mission: missions[0])
+    MissionView(mission: missions[1])
         .preferredColorScheme(.dark)
 }
