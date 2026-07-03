@@ -20,7 +20,7 @@ struct ContentView: View {
                 LazyVGrid(columns: columns) {
                     ForEach(missions) { mission in
                         NavigationLink {
-                            Text("DetailView")
+                            MissionView(mission: mission)
                         } label: {
                             MissionGridTile(mission: mission)
                         }
