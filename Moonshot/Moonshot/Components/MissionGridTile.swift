@@ -40,12 +40,6 @@ struct MissionGridTile: View {
 }
 
 #Preview {
-    MissionGridTile(
-        mission: Mission(
-            id: 1,
-            launchDate: nil,
-            crew: [],
-            description: ""
-        )
-    )
+    let missions: [Mission] = Bundle.main.decode("missions.json")
+    MissionGridTile(mission: missions[1])
 }
