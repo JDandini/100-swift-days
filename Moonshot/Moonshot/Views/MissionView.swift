@@ -20,12 +20,33 @@ struct MissionView: View {
                     }
                     .padding(.top)
                 VStack(alignment: .leading) {
+                    LineSeparator()
+
                     Text("Mission Highlights")
                         .font(.title.bold())
                         .padding(.bottom, 5)
+                    
                     Text(mission.description)
+
+                    LineSeparator()
+
+                    Text("Crew")
+                        .font(.title.bold())
+                        .padding(.bottom, 5)
                 }
                 .padding(.horizontal)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(mission.crewMembers, id: \.role) { member in
+                            NavigationLink {
+                                Text("Astronaut details")
+                            } label: {
+                                AstronautDataLite(member: member)
+                            }
+                        }
+                    }
+                }
+                .padding(.top)
             }
             .padding(.bottom)
         }

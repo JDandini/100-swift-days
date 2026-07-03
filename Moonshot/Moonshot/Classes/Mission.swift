@@ -13,6 +13,11 @@ struct Mission: Codable, Identifiable {
         let role: String
     }
 
+    struct CrewMember {
+        let role: String
+        let astronaut: Astronaut
+    }
+
     let id: Int
     let launchDate: Date?
     let crew: [CrewRole]
@@ -28,5 +33,17 @@ struct Mission: Codable, Identifiable {
 
     var formattedLaunchDate: String {
         launchDate?.formatted(date: .abbreviated, time: .omitted) ?? "N/A"
+    }
+
+    var crewMembers: [CrewMember] {
+        let astronauts: [String: Astronaut] = Bundle.main.decode("astronauts.json")
+        let crewMembers: [CrewMember] = crew.compactMap { role in
+            if let astronaut = astronauts[role.name] {
+                return CrewMember(role: role.role, astronaut: astronaut)
+            } else {
+                return nil
+            }
+        }
+        return crewMembers
     }
 }
