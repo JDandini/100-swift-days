@@ -39,7 +39,7 @@ struct MissionView: View {
                     HStack {
                         ForEach(mission.crewMembers, id: \.role) { member in
                             NavigationLink {
-                                Text("Astronaut details")
+                                AstronautView(astronaut: member.astronaut)
                             } label: {
                                 AstronautDataLite(member: member)
                             }
@@ -51,7 +51,6 @@ struct MissionView: View {
             .padding(.bottom)
         }
         .navigationTitle(mission.displayName)
-        .navigationBarTitleDisplayMode(.inline)
         .background(.darkBackground)
     }
 }
