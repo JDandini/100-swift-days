@@ -23,6 +23,12 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             missionsView
+                .navigationDestination(for: Mission.self, destination: { mission in
+                    MissionView(mission: mission)
+                })
+                .navigationDestination(for: Astronaut.self, destination: { astronaut in
+                    AstronautView(astronaut: astronaut)
+                })
                 .toolbar {
                     Button {
                         showAsGrid.toggle()
