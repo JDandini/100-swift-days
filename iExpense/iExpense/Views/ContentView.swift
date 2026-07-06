@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var showingAddExpense = false
     @State private var expenses = Expenses()
     private let currencyCode = Locale.current.currency?.identifier ?? "USD"
 
@@ -30,13 +29,12 @@ struct ContentView: View {
             }
             .navigationTitle("iExpense")
             .toolbar {
-                Button("Add Expense", systemImage: "plus") {
-                    showingAddExpense = true
+                NavigationLink {
+                    AddExpenseView(expenses: expenses)
+                } label: {
+                    Label("Add Expense", systemImage: "plus")
                 }
             }
-        }
-        .sheet(isPresented: $showingAddExpense) {
-            AddExpenseView(expenses: expenses)
         }
     }
 

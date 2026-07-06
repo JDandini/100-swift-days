@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var name = ""
+    @State private var name = "Add new expense"
     @State private var type = "Personal"
     @State private var amount: Double = 0.0
     @State private var showAlert: Bool = false
@@ -21,7 +21,6 @@ struct AddExpenseView: View {
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Name", text: $name)
 
                 Picker("Type", selection: $type) {
                     ForEach(types, id: \.self) {
@@ -37,9 +36,21 @@ struct AddExpenseView: View {
                 .keyboardType(.decimalPad)
                 .foregroundStyle(getAmountColor())
             }
-            .navigationTitle("Add new expense")
+            .navigationTitle($name)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
             .toolbar {
-                Button("Save", action: saveExpense)
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Save", action: saveExpense)
+                }
+
             }
             .alert("Addition error", isPresented: $showAlert) {
                 
