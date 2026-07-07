@@ -15,19 +15,13 @@ struct ContentView: View {
     }
 
     var body: some View {
-        Form {
-            Section {
-                TextField("Username", text: $username)
-                TextField("Email", text: $email)
-            }
+        Button("Encode Taylor", action: encodeTaylor)
+    }
 
-            Section {
-                Button("Create account") {
-                    print("Creating account…")
-                }
-            }
-            .disabled(disableForm)
-        }
+    func encodeTaylor() {
+        let data = try! JSONEncoder().encode(User())
+        let str = String(decoding: data, as: UTF8.self)
+        print(str)
     }
 }
 
@@ -35,3 +29,11 @@ struct ContentView: View {
     ContentView()
 }
 
+@Observable
+class User: Codable {
+    var name = "Taylor"
+
+    enum CodingKeys: String, CodingKey {
+        case _name = "name"
+    }
+}
