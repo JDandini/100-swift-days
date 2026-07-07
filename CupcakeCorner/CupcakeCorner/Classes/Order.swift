@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class Order {
+final class Order {
     enum Flavor: String, CaseIterable {
         case vanilla
         case strawberry
@@ -34,4 +34,5 @@ class Order {
     }
     var extraFrosting = false
     var addSprinkles = false
+    var shippingAddress = Address()
 }
