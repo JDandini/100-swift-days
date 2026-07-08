@@ -42,7 +42,7 @@ final class Order: Codable {
     }
     var extraFrosting = false
     var addSprinkles = false
-    var shippingAddress = Address()
+    var shippingAddress = Address.load() ?? Address()
 
     var total: Decimal {
         var cost = unitPrice * Decimal(quantity)
