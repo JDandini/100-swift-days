@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-final class Address {
+final class Address: Codable {
     var name = ""
     var streetAddress = ""
     var city = ""
@@ -16,5 +16,12 @@ final class Address {
 
     var isValidAddress: Bool {
         !name.isEmpty && !streetAddress.isEmpty && !city.isEmpty && !zip.isEmpty
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case _name = "name"
+        case _city = "city"
+        case _streetAddress = "streetAddress"
+        case _zip = "zip"
     }
 }

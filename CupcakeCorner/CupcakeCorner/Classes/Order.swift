@@ -8,9 +8,10 @@
 import Foundation
 
 @Observable
-final class Order {
-    let unitPrice: Decimal = 2
-    enum Flavor: String, CaseIterable {
+final class Order: Codable {
+    var unitPrice: Decimal = 2
+
+    enum Flavor: String, CaseIterable, Codable {
         case vanilla
         case strawberry
         case chocolate
@@ -55,5 +56,16 @@ final class Order {
         }
 
         return cost
+    }
+}
+
+extension Order {
+    enum CodingKeys: String, CodingKey {
+        case _flavor = "type"
+        case _quantity = "quantity"
+        case _specialRequestEnabled = "specialRequestEnabled"
+        case _extraFrosting = "extraFrosting"
+        case _addSprinkles = "addSprinkles"
+        case _shippingAddress = "address"
     }
 }

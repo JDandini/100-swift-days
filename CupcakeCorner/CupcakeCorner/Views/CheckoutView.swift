@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct CheckoutView: View {
+    @State private var alertMessage = ""
+    @State private var alertTitle = ""
+    @State private var showingAlert = false
+
     var order: Order
     var body: some View {
         ScrollView {
@@ -24,13 +28,42 @@ struct CheckoutView: View {
                 Text("Your total is \(order.total, format: .currency(code: "USD"))")
                     .font(.title)
 
-                Button("Place Order", action: { })
+                Button("Place Order") {
+                    Task {
+                        await placeOrder()
+                    }
+                }
                     .padding()
             }
         }
         .navigationTitle("Check out")
         .navigationBarTitleDisplayMode(.inline)
         .scrollBounceBehavior(.basedOnSize)
+        .alert(alertTitle, isPresented: $showingAlert) {
+            Button("OK") { }
+        } message: {
+            Text(alertMessage)
+        }
+    }
+
+    func placeOrder() async {
+        let networking = Networking()
+        let result = await networking.place(order: order)
+        if case .failure(let error) = result {
+            print(error)
+            alertTitle = "Oh no!"
+            alertMessage = "Something went wrong, please try again.\n\(error.localizedDescription)"
+            showingAlert = true
+        } else if case .success(let order) = result {
+            print(order)
+            alertTitle = "Thank you!"
+            alertMessage = String(
+                format: "Your order for %d %@ cupcakes is on its way!",
+                order.quantity,
+                order.flavor.displayName
+            )
+            showingAlert = true
+        }
     }
 }
 
