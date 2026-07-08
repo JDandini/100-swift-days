@@ -15,7 +15,7 @@ final class Address: Codable {
     var zip = ""
 
     var isValidAddress: Bool {
-        !name.isEmpty && !streetAddress.isEmpty && !city.isEmpty && !zip.isEmpty
+        !name.isEmptyOrWhitespace && !streetAddress.isEmptyOrWhitespace && !city.isEmptyOrWhitespace && !zip.isEmptyOrWhitespace
     }
 
     enum CodingKeys: String, CodingKey {
@@ -23,5 +23,12 @@ final class Address: Codable {
         case _city = "city"
         case _streetAddress = "streetAddress"
         case _zip = "zip"
+    }
+}
+
+
+extension String {
+    var isEmptyOrWhitespace: Bool {
+        isEmpty || trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
