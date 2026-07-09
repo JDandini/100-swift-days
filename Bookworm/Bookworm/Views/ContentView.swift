@@ -22,6 +22,7 @@ struct ContentView: View {
                 ForEach(books) { book in
                     ListBookRow(book: book)
                 }
+                .onDelete(perform: deleteBooks)
             }
             .navigationTitle("Bookworm")
             .toolbar {
@@ -30,6 +31,9 @@ struct ContentView: View {
                         showAddNewBook.toggle()
                     }
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
             }
             .sheet(isPresented: $showAddNewBook) {
                 AddNewBookView()
@@ -37,6 +41,14 @@ struct ContentView: View {
             .navigationDestination(for: Book.self) { book in
                 BookDetailView(book: book)
             }
+        }
+    }
+
+    func deleteBooks(at offsets: IndexSet) {
+        offsets.forEach { offset in
+            let book = books[offset]
+
+            modelContext.delete(book)
         }
     }
 }
