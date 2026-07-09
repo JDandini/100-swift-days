@@ -31,6 +31,9 @@ struct ContentView: View {
             .sheet(isPresented: $showAddNewBook) {
                 AddNewBookView()
             }
+            .navigationDestination(for: Book.self) { book in
+                BookDetailView(book: book)
+            }
         }
     }
 }
