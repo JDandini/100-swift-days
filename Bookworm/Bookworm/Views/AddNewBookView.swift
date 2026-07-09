@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct AddNewBook: View {
+struct AddNewBookView: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
@@ -60,5 +60,5 @@ struct AddNewBook: View {
 }
 
 #Preview {
-    AddNewBook()
+    AddNewBookView()
 }
