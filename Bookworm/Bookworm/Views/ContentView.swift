@@ -15,18 +15,22 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            Text("Count: \(books.count)")
-                .navigationTitle("Bookworm")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing)  {
-                        Button("Add Book", systemImage: "plus") {
-                            showAddNewBook.toggle()
-                        }
+            List {
+                ForEach(books) { book in
+                    ListBookRow(book: book)
+                }
+            }
+            .navigationTitle("Bookworm")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing)  {
+                    Button("Add Book", systemImage: "plus") {
+                        showAddNewBook.toggle()
                     }
                 }
-                .sheet(isPresented: $showAddNewBook) {
-                    AddNewBook()
-                }
+            }
+            .sheet(isPresented: $showAddNewBook) {
+                AddNewBook()
+            }
         }
     }
 }
