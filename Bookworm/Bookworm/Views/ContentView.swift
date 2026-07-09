@@ -9,31 +9,25 @@ import SwiftData
 import SwiftUI
 
 struct ContentView: View {
-    @Query var students: [Student]
+    @State private var showAddNewBook: Bool = false
     @Environment(\.modelContext) var modelContext
+    @Query var books: [Book]
 
     var body: some View {
         NavigationStack {
-            List(students) { student in
-                Text(student.name)
-            }
-            .navigationTitle("Classroom")
-            .toolbar {
-                Button("Add", action: createStudent)
-            }
+            Text("Count: \(books.count)")
+                .navigationTitle("Bookworm")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing)  {
+                        Button("Add Book", systemImage: "plus") {
+                            showAddNewBook.toggle()
+                        }
+                    }
+                }
+                .sheet(isPresented: $showAddNewBook) {
+                    AddNewBook()
+                }
         }
-
-    }
-
-    func createStudent() {
-        let firstNames = ["Ginny", "Harry", "Hermione", "Luna", "Ron"]
-        let lastNames = ["Granger", "Lovegood", "Potter", "Weasley"]
-
-        let chosenFirstName = firstNames.randomElement()!
-        let chosenLastName = lastNames.randomElement()!
-
-        let student = Student(id: UUID(), name: "\(chosenFirstName) \(chosenLastName)")
-        modelContext.insert(student)
     }
 }
 
