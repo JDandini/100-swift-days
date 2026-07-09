@@ -17,6 +17,9 @@ struct AddNewBookView: View {
     @State private var rating = 3
     @State private var genre = "Fantasy"
     @State private var review = ""
+
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
     let genres = ["Fantasy", "Horror", "Kids", "Mystery", "Poetry", "Romance", "Thriller"]
 
 
@@ -44,10 +47,23 @@ struct AddNewBookView: View {
                 }
             }
             .navigationTitle("Add Book")
+            .alert("Wait a second", isPresented: $showingAlert) {
+
+            } message: {
+                Text(alertMessage)
+            }
+
         }
     }
 
     private func saveBook() {
+        guard !author.isEmptyOrWhitespace,
+              !title.isEmptyOrWhitespace,
+              !review.isEmptyOrWhitespace else {
+            alertMessage = "The author, title and review are required"
+            showingAlert.toggle()
+            return
+        }
         let newBook = Book(
             title: title,
             author: author,
