@@ -45,18 +45,9 @@ struct AddNewBook: View {
                 }
 
                 Section {
-                    Button("Save") {
-                        let newBook = Book(
-                            title: title,
-                            author: author,
-                            genre: genre,
-                            review: review,
-                            rating: rating)
-                        modelContext.insert(newBook)
-                    }
+                    Button("Save", action: saveBook)
                 }
             }
-            .padding()
             .navigationTitle("Add Book")
         }
     }
