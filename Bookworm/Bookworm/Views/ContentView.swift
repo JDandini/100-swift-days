@@ -11,7 +11,10 @@ import SwiftUI
 struct ContentView: View {
     @State private var showAddNewBook: Bool = false
     @Environment(\.modelContext) var modelContext
-    @Query var books: [Book]
+    @Query(sort: [
+        SortDescriptor(\Book.rating, order: .reverse),
+        SortDescriptor(\Book.title)
+    ]) var books: [Book]
 
     var body: some View {
         NavigationStack {
