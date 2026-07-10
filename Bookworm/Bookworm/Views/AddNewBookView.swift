@@ -57,10 +57,20 @@ struct AddNewBookView: View {
     }
 
     private func saveBook() {
-        guard !author.isEmptyOrWhitespace,
-              !title.isEmptyOrWhitespace,
-              !review.isEmptyOrWhitespace else {
-            alertMessage = "The author, title and review are required"
+        guard !author.isEmptyOrWhitespace else {
+            alertMessage = "The author, is required"
+            showingAlert.toggle()
+            return
+        }
+
+        guard !title.isEmptyOrWhitespace else {
+            alertMessage = "The book title, is required"
+            showingAlert.toggle()
+            return
+        }
+
+        guard !review.isEmptyOrWhitespace else {
+            alertMessage = "The review is required"
             showingAlert.toggle()
             return
         }
