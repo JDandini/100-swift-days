@@ -38,6 +38,9 @@ struct BookDetailView: View {
 
             RatingView(rating: .constant(book.rating))
                 .font(.largeTitle)
+
+            ReadDateView(book: book)
+                .padding()
         }
         .navigationTitle(book.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -68,7 +71,14 @@ struct BookDetailView: View {
             for: Book.self,
             configurations: config
         )
-        let example = Book(title: "Test Book", author: "Test Author", genre: "Fantasy", review: "This was a great book; I really enjoyed it.", rating: 4)
+        let example = Book(
+            title: "Test Book",
+            author: "Test Author",
+            genre: "Fantasy",
+            review: "This was a great book; I really enjoyed it.",
+            rating: 4,
+            readDate: .now
+        )
         return BookDetailView(book: example)
                     .modelContainer(container)
     } catch {

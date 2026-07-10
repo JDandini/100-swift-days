@@ -18,6 +18,7 @@ struct ListBookRow: View {
                 VStack(alignment: .leading) {
                     Text(book.title)
                         .font(.headline)
+                        .foregroundStyle(book.rating > 1 ? .black : .red)
                     Text(book.author)
                         .foregroundStyle(.secondary)
                 }
@@ -31,6 +32,7 @@ struct ListBookRow: View {
                     author: "Author",
                     genre: "Drama",
                     review: "Good review",
-                    rating: 4)
+                    rating: 1,
+                    readDate: nil)
     ListBookRow(book: book)
 }

@@ -15,18 +15,27 @@ class Book {
     var genre: String
     var review: String
     var rating: Int
+    var readDate: Date?
 
     init(
         title: String,
         author: String,
         genre: String,
         review: String,
-        rating: Int
+        rating: Int,
+        readDate: Date?
     ) {
         self.title = title
         self.author = author
         self.genre = genre
         self.review = review
         self.rating = rating
+        self.readDate = readDate
+    }
+}
+
+extension Book {
+    var formattedReadDate: String {
+        readDate?.formatted(date: .abbreviated, time: .omitted) ?? "Unknown"
     }
 }
