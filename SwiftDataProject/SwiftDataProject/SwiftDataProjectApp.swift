@@ -15,5 +15,6 @@ struct SwiftDataProjectApp: App {
             ContentView()
         }
         .modelContainer(for: User.self)
+        .modelContainer(for: Job.self)
     }
 }
