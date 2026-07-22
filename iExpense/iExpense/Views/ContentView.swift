@@ -14,42 +14,57 @@ struct ContentView: View {
         SortDescriptor(\ExpenseItem.amount, order: .reverse),
         SortDescriptor(\ExpenseItem.type)
     ]
+    @State private var filterBy = "All"
     @Query var expenses: [ExpenseItem]
    
     private let currencyCode = Locale.current.currency?.identifier ?? "USD"
 
     var body: some View {
         NavigationStack {
-            ExpenseListView(sortBy: sortBy)
+            ExpenseListView(sortBy: sortBy, filterBy: filterBy)
             .navigationTitle("iExpense")
             .toolbar {
-                NavigationLink {
-                    AddExpenseView()
-                } label: {
-                    Label("Add Expense", systemImage: "plus")
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        AddExpenseView()
+                    } label: {
+                        Label("Add Expense", systemImage: "plus")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu("Sort", systemImage: "arrow.up.arrow.down") {
+                        NavigationLink {
+                            AddExpenseView()
+                        } label: {
+                            Label("Add Expense", systemImage: "plus")
+                        }
+                        Picker("Sort", selection: $sortBy) {
+                            Text("Sort by Amount")
+                                .tag([
+                                    SortDescriptor(\ExpenseItem.amount, order: .reverse),
+                                    SortDescriptor(\ExpenseItem.type)
+                                ])
+                            
+                            Text("Sort by type")
+                                .tag([
+                                    SortDescriptor(\ExpenseItem.type),
+                                    SortDescriptor(\ExpenseItem.amount, order: .reverse)
+                                ])
+                        }
+                    }
                 }
                 
-                Menu("Sort", systemImage: "arrow.up.arrow.down") {
-                    Picker("Sort", selection: $sortBy) {
-                        Text("Sort by Amount")
-                            .tag([
-                                SortDescriptor(\ExpenseItem.amount, order: .reverse),
-                                SortDescriptor(\ExpenseItem.type)
-                            ])
-                        
-                        Text("Sort by type")
-                            .tag([
-                                SortDescriptor(\ExpenseItem.type),
-                                SortDescriptor(\ExpenseItem.amount, order: .reverse)
-                            ])
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu("Filter", systemImage: "line.3.horizontal.decrease") {
+                        Picker("Filter", selection: $filterBy) {
+                            Text("All expenses").tag("All")
+                            Text("Personal expenses").tag("Personal")
+                            Text("Business expenses").tag("Business")
+                        }
                     }
                 }
             }
         }
-    }
-    
-    init() {
-        _expenses = Query(sort: sortBy)
     }
 
     func removeItems(at offsets: IndexSet) {
@@ -61,5 +76,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: ExpenseItem.self, inMemory: true)
+        .modelContainer(for: ExpenseItem.self, inMemory: true) //line.3.horizontal.decrease
 }

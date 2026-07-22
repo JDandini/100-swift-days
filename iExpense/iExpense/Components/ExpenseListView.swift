@@ -12,8 +12,13 @@ struct ExpenseListView: View {
     @Environment(\.modelContext) var modelContext
     @Query var expenses: [ExpenseItem]
  
-    init(sortBy: [SortDescriptor<ExpenseItem>]) {
-        _expenses = Query(sort: sortBy)
+    init(sortBy: [SortDescriptor<ExpenseItem>], filterBy: String) {
+        _expenses = Query(
+            filter: #Predicate<ExpenseItem> { expense in
+                filterBy == "All" || expense.type == filterBy
+            },
+            sort: sortBy
+        )
     }
  
     var body: some View {
