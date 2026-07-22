@@ -5,17 +5,19 @@
 //  Created by Javier Castañeda on 01/07/26.
 //
 
+import SwiftData
 import SwiftUI
 
 struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
     @State private var name = "Add new expense"
     @State private var type = "Personal"
     @State private var amount: Double = 0.0
     @State private var showAlert: Bool = false
 
     let types = ["Business", "Personal"]
-    var expenses: Expenses
+
     private let currencyCode = Locale.current.currency?.identifier ?? "USD"
 
     var body: some View {
@@ -66,7 +68,7 @@ struct AddExpenseView: View {
             return
         }
         let expense = ExpenseItem(name: name, type: type, amount: amount)
-        expenses.items.append(expense)
+        modelContext.insert(expense)
         dismiss()
     }
 
@@ -83,5 +85,5 @@ struct AddExpenseView: View {
 }
 
 #Preview {
-    AddExpenseView(expenses: Expenses())
+    AddExpenseView()
 }
