@@ -10,30 +10,17 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
+    @State private var sortBy = [
+        SortDescriptor(\ExpenseItem.amount, order: .reverse),
+        SortDescriptor(\ExpenseItem.type)
+    ]
     @Query var expenses: [ExpenseItem]
-
+   
     private let currencyCode = Locale.current.currency?.identifier ?? "USD"
 
     var body: some View {
         NavigationStack {
-            List {
-                Section("Personal") {
-                    ForEach(expenses.filter { $0.type == "Personal" }) { item in
-                        ExpenseRowView(item: item)
-                    }
-                    .onDelete { offsets in
-                        removeItems(at: offsets, type: "Personal")
-                    }
-                }
-                Section("Business") {
-                    ForEach(expenses.filter { $0.type == "Business" }) { item in
-                        ExpenseRowView(item: item)
-                    }
-                    .onDelete { offsets in
-                        removeItems(at: offsets, type: "Business")
-                    }
-                }
-            }
+            ExpenseListView(sortBy: sortBy)
             .navigationTitle("iExpense")
             .toolbar {
                 NavigationLink {
@@ -41,14 +28,33 @@ struct ContentView: View {
                 } label: {
                     Label("Add Expense", systemImage: "plus")
                 }
+                
+                Menu("Sort", systemImage: "arrow.up.arrow.down") {
+                    Picker("Sort", selection: $sortBy) {
+                        Text("Sort by Amount")
+                            .tag([
+                                SortDescriptor(\ExpenseItem.amount, order: .reverse),
+                                SortDescriptor(\ExpenseItem.type)
+                            ])
+                        
+                        Text("Sort by type")
+                            .tag([
+                                SortDescriptor(\ExpenseItem.type),
+                                SortDescriptor(\ExpenseItem.amount, order: .reverse)
+                            ])
+                    }
+                }
             }
         }
     }
+    
+    init() {
+        _expenses = Query(sort: sortBy)
+    }
 
-    func removeItems(at offsets: IndexSet, type: String) {
-        let filtered = expenses.filter { $0.type == type }
+    func removeItems(at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(filtered[index])
+            modelContext.delete(expenses[index])
         }
     }
 }

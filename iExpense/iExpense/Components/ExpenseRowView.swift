@@ -15,7 +15,10 @@ struct ExpenseRowView: View {
             VStack(alignment: .leading) {
                 Text(item.name)
                     .font(.headline)
-                Text(item.type)
+                HStack {
+                    Image(systemName: item.type == "Personal" ? "person.fill" : "building.fill")
+                    Text(item.type)
+                }
             }
 
             Spacer()
@@ -52,4 +55,4 @@ struct ExpenseRowView: View {
                                      type: "Personal",
                                      amount: 10)
     )
-}
+}//person.fill building
