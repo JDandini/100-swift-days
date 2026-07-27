@@ -20,13 +20,13 @@ struct ContentView: View {
                 .blur(radius: blurAmount)
             
             Slider(value: $blurAmount, in: 0...20)
-            
-            Button("Random Blur") {
-                blurAmount = Double.random(in: 0...20)
-            }
+                .onChange(of: blurAmount) { oldValue, newValue in
+                    print("New value is \(newValue)")
+                }
         }
     }
 }
+
 
 #Preview {
     ContentView()
