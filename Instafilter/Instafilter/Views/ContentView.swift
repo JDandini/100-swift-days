@@ -12,12 +12,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var image: Image?
     var body: some View {
-        VStack {
-            image?
-                .resizable()
-                .scaledToFit()
-        }
-        .onAppear(perform: loadImage)
+        createUnavailabeView()
     }
     
     private func loadImage() {
@@ -41,6 +36,28 @@ struct ContentView: View {
         }
         let uiImage = UIImage(cgImage: cgImage)
         image = Image(uiImage: uiImage)
+    }
+    
+    fileprivate func createUnavailabeView() -> some View {
+        ContentUnavailableView {
+            Label("No snippets", systemImage: "swift")
+        } description: {
+            Text("You don't have any saved snippets yet.")
+        } actions: {
+            Button("Create Snippet") {
+                // create a snippet
+            }
+            .buttonStyle(.borderedProminent)
+        }
+    }
+    
+    fileprivate func imageWithEffects() -> some View {
+        return VStack {
+            image?
+                .resizable()
+                .scaledToFit()
+        }
+        .onAppear(perform: loadImage)
     }
 }
 
