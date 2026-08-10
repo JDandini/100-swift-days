@@ -13,6 +13,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var processedImage: Image?
     @State private var filterIntensity = 0.5
+    @State private var radius = 0.0
     @State private var selectedItem: PhotosPickerItem?
     @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
     @State private var showingFilters = false
@@ -25,7 +26,16 @@ struct ContentView: View {
                     ImagePreview(processedImage: processedImage)
                 }
                 .onChange(of: selectedItem, loadImage)
-                SliderIntensity(filterIntensity: $filterIntensity, action: applyProcessing)
+                SliderAndText(
+                    sliderValue: $filterIntensity,
+                    title: "Intensity",
+                    action: applyProcessing
+                )
+                SliderAndText(
+                    sliderValue: $radius,
+                    title: "Radius",
+                    action: applyProcessing
+                )
                 ButtonLeftAligned(
                     imageToShare: processedImage,
                     buttonText: "Change Filter",
@@ -67,11 +77,15 @@ struct ContentView: View {
         if inputKeys.contains(kCIInputIntensityKey) {
             currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey)
         }
-        if inputKeys.contains(kCIInputRadiusKey) {
-            currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey)
-        }
+//        if inputKeys.contains(kCIInputRadiusKey) {
+//            currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey)
+//        }
         if inputKeys.contains(kCIInputScaleKey) {
             currentFilter.setValue(filterIntensity * 10, forKey: kCIInputScaleKey)
+        }
+
+        if inputKeys.contains(kCIInputRadiusKey) {
+            currentFilter.setValue(radius * 200, forKey: kCIInputRadiusKey)
         }
 
         guard let outputImage = currentFilter.outputImage,

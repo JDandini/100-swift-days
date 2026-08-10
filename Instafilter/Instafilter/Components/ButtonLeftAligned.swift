@@ -13,6 +13,7 @@ struct ButtonLeftAligned: View {
     var body: some View {
         HStack {
             Button(buttonText, action:  buttonAction)
+                .disabled(imageToShare == nil)
             Spacer()
             
             // share the picture
