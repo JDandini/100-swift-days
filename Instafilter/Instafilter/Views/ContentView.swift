@@ -5,60 +5,43 @@
 //  Created by Javier Castañeda on 22/07/26.
 //
 
-import CoreImage
-import CoreImage.CIFilterBuiltins
+import PhotosUI
 import SwiftUI
 
 struct ContentView: View {
-    @State private var image: Image?
+    @State private var pickerItems: [PhotosPickerItem] = []
+    @State private var selectedImages: [Image] = []
     var body: some View {
-        createUnavailabeView()
-    }
-    
-    private func loadImage() {
-        let inputImage = UIImage(resource: .example)
-        let beginImage = CIImage(image: inputImage)
-        let context = CIContext()
-        let currentFilter = CIFilter.twirlDistortion()
-        currentFilter.inputImage = beginImage
-
-        let amount = 1.0
-
-        let inputKeys = currentFilter.inputKeys
-
-        if inputKeys.contains(kCIInputIntensityKey) {
-            currentFilter.setValue(amount, forKey: kCIInputIntensityKey) }
-        if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(amount * 200, forKey: kCIInputRadiusKey) }
-        if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(amount * 10, forKey: kCIInputScaleKey) }
-        guard let outputImage = currentFilter.outputImage,
-              let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else {
-            return
-        }
-        let uiImage = UIImage(cgImage: cgImage)
-        image = Image(uiImage: uiImage)
-    }
-    
-    fileprivate func createUnavailabeView() -> some View {
-        ContentUnavailableView {
-            Label("No snippets", systemImage: "swift")
-        } description: {
-            Text("You don't have any saved snippets yet.")
-        } actions: {
-            Button("Create Snippet") {
-                // create a snippet
+        VStack {
+            ScrollView {
+                ForEach(0 ..< selectedImages.count, id: \.self) { i in
+                    selectedImages[i]
+                                .resizable()
+                                .scaledToFit()
+                }
             }
-            .buttonStyle(.borderedProminent)
+            PhotosPicker(
+                selection: $pickerItems,
+                maxSelectionCount: 3,
+                matching: .any(of: [.images, .not(.screenshots)])
+            ) {
+                Label("Select a picture", systemImage: "photo")
+            }
+
+        }
+        .onChange(of: pickerItems) {
+            Task {
+                selectedImages.removeAll()
+
+                for item in pickerItems {
+                    if let loadedImage = try await item.loadTransferable(type: Image.self) {
+                        selectedImages.append(loadedImage)
+                    }
+                }
+            }
         }
     }
     
-    fileprivate func imageWithEffects() -> some View {
-        return VStack {
-            image?
-                .resizable()
-                .scaledToFit()
-        }
-        .onAppear(perform: loadImage)
-    }
 }
 
 
