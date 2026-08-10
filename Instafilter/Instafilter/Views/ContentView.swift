@@ -27,6 +27,7 @@ struct ContentView: View {
                 .onChange(of: selectedItem, loadImage)
                 SliderIntensity(filterIntensity: $filterIntensity, action: applyProcessing)
                 ButtonLeftAligned(
+                    imageToShare: processedImage,
                     buttonText: "Change Filter",
                     buttonAction: changeFilter
                 )
@@ -45,11 +46,11 @@ struct ContentView: View {
 
         }
     }
-    
+
     private func changeFilter() {
         showingFilters = true
     }
-    
+
     private func loadImage() {
         Task {
             guard let imageData = try await selectedItem?.loadTransferable(type: Data.self),
@@ -59,7 +60,7 @@ struct ContentView: View {
             applyProcessing()
         }
     }
-    
+
     private func applyProcessing() {
         let inputKeys = currentFilter.inputKeys
 
@@ -86,7 +87,6 @@ struct ContentView: View {
         loadImage()
     }
 }
-
 
 #Preview {
     ContentView()

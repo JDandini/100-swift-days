@@ -7,6 +7,7 @@
 
 import SwiftUI
 struct ButtonLeftAligned: View {
+    var imageToShare: Image?
     let buttonText: String
     let buttonAction: @MainActor () -> Void
     var body: some View {
@@ -15,12 +16,21 @@ struct ButtonLeftAligned: View {
             Spacer()
             
             // share the picture
+            if let image = imageToShare {
+                ShareLink(
+                    item: image,
+                    preview: SharePreview(
+                        "Instafilter image",
+                        image: image
+                    )
+                )
+            }
         }
     }
 }
 
 #Preview  {
-    ButtonLeftAligned(buttonText: "Button to tap") {
+    ButtonLeftAligned(imageToShare: nil, buttonText: "Button to tap") {
         print("Pressed")
     }
 }
