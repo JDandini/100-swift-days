@@ -14,24 +14,12 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Spacer()
-                if let processedImage {
-                    processedImage
-                        .resizable()
-                        .scaledToFit()
-                } else {
-                    ContentUnavailableView("No Picture", systemImage: "photo.badge.plus", description: Text("Tap to import a photo"))
-                }
-                Spacer()
-                
+                ImagePreview(processedImage: processedImage)
                 SliderIntensity(filterIntensity: $filterIntensity)
-                
-                HStack {
-                    Button("Change Filter", action:  changeFilter)
-                    Spacer()
-                    
-                    // share the picture
-                }
+                ButtonLeftAligned(
+                    buttonText: "Change Filter",
+                    buttonAction: changeFilter
+                )
             }
             .padding([.horizontal, .bottom])
             .navigationTitle("Instafilter")

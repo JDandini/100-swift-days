@@ -18,6 +18,7 @@ struct SliderIntensity: View {
     }
 }
 
-//#Preview {
-//    SliderIntensity(filterIntensity: <#Binding<Double>#>)
-//}
+#Preview {
+    @Previewable @State var intensity = 0.5
+    SliderIntensity(filterIntensity: $intensity)
+}
