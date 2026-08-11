@@ -37,3 +37,14 @@ extension Bundle {
         }
     }
 }
+
+extension FileManager {
+    static func decodeJSONFile<T: Decodable>(withName name: String)throws -> T {
+        let url = URL.documentsDirectory.appending(path: name)
+        guard let data = try? Data(contentsOf: url) else {
+            fatalError("Failed to load \(name) from bundle.")
+        }
+        let decoder = JSONDecoder()
+        return try decoder.decode(T.self, from: data)
+    }
+}
