@@ -15,11 +15,7 @@ struct ContentView: View {
         if viewModel.isUnlocked {
             MapView(viewModel: $viewModel)
         } else {
-            Button("Unlock Places", action: viewModel.authenticate)
-                .padding()
-                .background(.blue)
-                .foregroundStyle(.white)
-                .clipShape(.capsule)
+            LockScreen(viewModel: $viewModel)
         }
     }
 }
