@@ -20,6 +20,14 @@ struct LockScreen: View {
                 viewModel.authenticate()
             }
         }
+        .alert("Authentication error", isPresented: Binding(
+            get: { viewModel.authenticationError != nil },
+            set: { if !$0 { viewModel.authenticationError = nil } }
+        )) {
+            Button("OK") {}
+        } message: {
+            Text(viewModel.authenticationError?.localizedDescription ?? "Unknown error")
+        }
     }
 }
 

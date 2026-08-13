@@ -17,6 +17,7 @@ extension ContentView {
         private(set) var locations: [Location]
         var selectedPlace: Location?
         var isUnlocked = false
+        var authenticationError: Error?
 
         init() {
             do {
@@ -73,7 +74,7 @@ extension ContentView {
                         if success {
                             self?.isUnlocked = true
                         } else {
-                            // error
+                            self?.authenticationError = authenticationError
                         }
                     }
             } else {
