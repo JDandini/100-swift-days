@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MapView: View {
     @Binding var viewModel: ContentView.ViewModel
+    @State private var styleSelected: MapTypeOption = .standard
     let startPosition = MapCameraPosition.region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 56, longitude: -3),
@@ -17,36 +18,77 @@ struct MapView: View {
         )
     )
     var body: some View {
-        MapReader { proxy in
-            Map(initialPosition: startPosition) {
-                ForEach(viewModel.locations) { location in
-                    Annotation(location.name, coordinate: location.coordinate) {
-                        Image(systemName: "star.circle")
-                            .resizable()
-                            .foregroundStyle(.teal)
-                            .frame(width: 44, height: 44)
-                            .background(.white)
-                            .clipShape(.circle)
-                            .onLongPressGesture {
-                                viewModel.selectedPlace = location
-                            }
+        NavigationStack {
+            MapReader { proxy in
+                Map(initialPosition: startPosition) {
+                    ForEach(viewModel.locations) { location in
+                        Annotation(location.name, coordinate: location.coordinate) {
+                            Image(systemName: "star.circle")
+                                .resizable()
+                                .foregroundStyle(.teal)
+                                .frame(width: 44, height: 44)
+                                .background(.white)
+                                .clipShape(.circle)
+                                .onLongPressGesture {
+                                    viewModel.selectedPlace = location
+                                }
+                        }
                     }
                 }
-            }
-            .onTapGesture { position in
-                if let coordinate = proxy.convert(position, from: .local) {
-                    viewModel.addLocation(at: coordinate)
+                .onTapGesture { position in
+                    if let coordinate = proxy.convert(position, from: .local) {
+                        viewModel.addLocation(at: coordinate)
+                    }
                 }
-            }
-            .sheet(item: $viewModel.selectedPlace) { place in
-                EditPlaceView(location: place) {
-                    viewModel.update(location: $0)
+                .sheet(item: $viewModel.selectedPlace) { place in
+                    EditPlaceView(location: place) {
+                        viewModel.update(location: $0)
+                    }
+                }
+                .mapStyle(styleSelected.mapStyle)
+            }.toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Picker("Map style", selection: $styleSelected) {
+                            ForEach(MapTypeOption.allCases) { option in
+                                Label(option.rawValue, systemImage: option.icon)
+                                    .tag(option)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "map")
+                    }
                 }
             }
         }
     }
 }
 
+extension MapView {
+    enum MapTypeOption: String, CaseIterable, Identifiable {
+        case standard
+        case hybrid
+        case satellite
+
+        var id: String { rawValue }
+
+        var mapStyle: MapStyle {
+            switch self {
+            case .standard: return .standard
+            case .hybrid: return .hybrid
+            case .satellite: return .imagery
+            }
+        }
+
+        var icon: String {
+            switch self {
+            case .standard: return "map"
+            case .hybrid: return "globe.americas"
+            case .satellite: return "camera.viewfinder"
+            }
+        }
+    }
+}
 #Preview {
     @Previewable @State var viewModel = ContentView.ViewModel()
     MapView(viewModel: $viewModel)
