@@ -29,17 +29,27 @@ struct MapView: View {
                                 .frame(width: 44, height: 44)
                                 .background(.white)
                                 .clipShape(.circle)
-                                .onLongPressGesture {
+                                .onTapGesture {
                                     viewModel.selectedPlace = location
                                 }
                         }
                     }
                 }
-                .onTapGesture { position in
-                    if let coordinate = proxy.convert(position, from: .local) {
-                        viewModel.addLocation(at: coordinate)
-                    }
-                }
+                .gesture(
+                    LongPressGesture(minimumDuration: 0.5)
+                        .sequenced(before: DragGesture(minimumDistance: 0))
+                        .onEnded { value in
+                            switch value {
+                            case .second(true, let drag):
+                                if let location = drag?.location,
+                                   let coordinate = proxy.convert(location, from: .local) {
+                                    viewModel.addLocation(at: coordinate)
+                                }
+                            default:
+                                break
+                            }
+                        }
+                )
                 .sheet(item: $viewModel.selectedPlace) { place in
                     EditPlaceView(location: place) {
                         viewModel.update(location: $0)
