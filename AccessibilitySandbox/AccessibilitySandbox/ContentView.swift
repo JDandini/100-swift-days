@@ -15,15 +15,24 @@ struct ContentView: View {
         "nicolas-tissot-335096"
     ]
 
+    let labels = [
+        "Tulips",
+        "Frozen tree buds",
+        "Sunflowers",
+        "Fireworks",
+    ]
+
     @State private var selectedPicture = Int.random(in: 0...3)
 
     var body: some View {
-        Image(pictures[selectedPicture])
-            .resizable()
-            .scaledToFit()
-            .onTapGesture {
-                selectedPicture = Int.random(in: 0...3)
-            }
+        Button {
+            selectedPicture = Int.random(in: 0...3)
+        } label: {
+            Image(pictures[selectedPicture])
+                .resizable()
+                .scaledToFit()
+        }
+        .accessibilityLabel(labels[selectedPicture])
     }
 }
 
