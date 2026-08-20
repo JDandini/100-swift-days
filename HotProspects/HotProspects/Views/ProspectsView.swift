@@ -5,14 +5,26 @@
 //  Created by Javier Castañeda on 20/08/26.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ProspectsView: View {
+    @Query(sort: \Prospect.name) var prospects: [Prospect]
+    @Environment(\.modelContext) var modelContext
     let filter: FilterType
+
     var body: some View {
         NavigationStack {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-                .navigationTitle(title)
+            List(prospects) { prospect in
+                ProspectListRow(prospect: prospect)
+            }
+            .navigationTitle(title)
+            .toolbar {
+                Button("Scan", systemImage: "qrcode.viewfinder") {
+                    let prospect = Prospect(name: "Paul Hudson", emailAddress: "paul@hackingwithswift.com", isContacted: false)
+                    modelContext.insert(prospect)
+                }
+            }
         }
     }
 
@@ -26,6 +38,21 @@ struct ProspectsView: View {
             "Uncontacted people"
         }
     }
+
+    init(filter: FilterType) {
+        self.filter = filter
+
+        if filter != .none {
+            let showContactedOnly = filter == .contacted
+
+            _prospects = Query(
+                filter: #Predicate {
+                    $0.isContacted == showContactedOnly
+                },
+                sort: [SortDescriptor(\Prospect.name)]
+            )
+        }
+    }
 }
 
 extension ProspectsView {
@@ -35,4 +62,5 @@ extension ProspectsView {
 }
 #Preview {
     ProspectsView(filter: .none)
+        .modelContainer(for: Prospect.self)
 }
