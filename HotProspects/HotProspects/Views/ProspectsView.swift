@@ -15,16 +15,50 @@ struct ProspectsView: View {
     @Environment(\.modelContext) var modelContext
     let filter: FilterType
     @State private var isShowingScanner = false
+    @State private var selectedProspects = Set<Prospect>()
 
     var body: some View {
         NavigationStack {
-            List(prospects) { prospect in
+            List(prospects, selection: $selectedProspects) { prospect in
                 ProspectListRow(prospect: prospect)
+                    .swipeActions {
+                        Button("Delete", systemImage: "trash", role: .destructive) {
+                            modelContext.delete(prospect)
+                        }
+                        if prospect.isContacted {
+                            Button(
+                                "Mark Uncontacted",
+                                systemImage: "person.crop.circle.badge.xmark"
+                            ) {
+                                prospect.isContacted.toggle()
+                            }
+                            .tint(.blue)
+                        } else {
+                            Button(
+                                "Mark Contacted",
+                                systemImage: "person.crop.circle.fill.badge.checkmark"
+                            ) {
+                                prospect.isContacted.toggle()
+                            }
+                            .tint(.green)
+                        }
+                    }
+                    .tag(prospect)
             }
             .navigationTitle(title)
             .toolbar {
-                Button("Scan", systemImage: "qrcode.viewfinder") {
-                    isShowingScanner = true
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Scan", systemImage: "qrcode.viewfinder") {
+                        isShowingScanner = true
+                    }
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
+                if selectedProspects.isEmpty == false {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Delete Selected", action: delete)
+                    }
                 }
             }
             .sheet(isPresented: $isShowingScanner) {
@@ -77,6 +111,12 @@ struct ProspectsView: View {
             print("Scanning failed: \(error.localizedDescription)")
         }
      }
+
+    private func delete() {
+        selectedProspects.forEach { prospect in
+            modelContext.delete(prospect)
+        }
+    }
 }
 
 extension ProspectsView {
