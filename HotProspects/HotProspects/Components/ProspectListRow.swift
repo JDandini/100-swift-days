@@ -9,13 +9,21 @@ import SwiftUI
 
 struct ProspectListRow: View {
     let prospect: Prospect
+    private var isContactedImageName: String {
+        prospect.isContacted ? "person.crop.circle.fill.badge.checkmark" : "person.crop.circle.badge.xmark"
+    }
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(prospect.name)
-                .font(.headline)
-            Text(prospect.emailAddress)
-                .foregroundStyle(.secondary)
+        HStack {
+            Image(systemName: isContactedImageName)
+            VStack(alignment: .leading) {
+                Text(prospect.name)
+                    .font(.headline)
+                Text(prospect.emailAddress)
+                    .foregroundStyle(.secondary)
+            }
         }
+
     }
 }
 
