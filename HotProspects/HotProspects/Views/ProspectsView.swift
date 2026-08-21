@@ -14,6 +14,7 @@ import UserNotifications
 struct ProspectsView: View {
     @Query(sort: \Prospect.name) var prospects: [Prospect]
     @Environment(\.modelContext) var modelContext
+    @Environment(\.editMode) private var editMode
     let filter: FilterType
     @State private var isShowingScanner = false
     @State private var selectedProspects = Set<Prospect>()
@@ -21,35 +22,44 @@ struct ProspectsView: View {
     var body: some View {
         NavigationStack {
             List(prospects, selection: $selectedProspects) { prospect in
-                ProspectListRow(prospect: prospect)
-                    .swipeActions {
-                        Button("Delete", systemImage: "trash", role: .destructive) {
-                            modelContext.delete(prospect)
-                        }
-                        if prospect.isContacted {
-                            Button(
-                                "Mark Uncontacted",
-                                systemImage: "person.crop.circle.badge.xmark"
-                            ) {
-                                prospect.isContacted.toggle()
-                            }
-                            .tint(.blue)
-                        } else {
-                            Button(
-                                "Mark Contacted",
-                                systemImage: "person.crop.circle.fill.badge.checkmark"
-                            ) {
-                                prospect.isContacted.toggle()
-                            }
-                            .tint(.green)
-                            
-                            Button("Remind Me", systemImage: "bell") {
-                                addNotification(for: prospect)
-                            }
-                            .tint(.orange)
+                Group {
+                    if editMode?.wrappedValue.isEditing == true {
+                        ProspectListRow(prospect: prospect)
+                            .tag(prospect)
+                    } else {
+                        NavigationLink(destination: EditProspectView(prospect: prospect)) {
+                            ProspectListRow(prospect: prospect)
                         }
                     }
-                    .tag(prospect)
+                }
+                .swipeActions {
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        modelContext.delete(prospect)
+                    }
+                    if prospect.isContacted {
+                        Button(
+                            "Mark Uncontacted",
+                            systemImage: "person.crop.circle.badge.xmark"
+                        ) {
+                            prospect.isContacted.toggle()
+                        }
+                        .tint(.blue)
+                    } else {
+                        Button(
+                            "Mark Contacted",
+                            systemImage: "person.crop.circle.fill.badge.checkmark"
+                        ) {
+                            prospect.isContacted.toggle()
+                        }
+                        .tint(.green)
+
+                        Button("Remind Me", systemImage: "bell") {
+                            addNotification(for: prospect)
+                        }
+                        .tint(.orange)
+                    }
+                }
+                .tag(prospect)
             }
             .navigationTitle(title)
             .toolbar {
@@ -61,7 +71,7 @@ struct ProspectsView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     EditButton()
                 }
-                if selectedProspects.isEmpty == false {
+                if editMode?.wrappedValue.isEditing == true {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("Delete Selected", action: delete)
                     }
