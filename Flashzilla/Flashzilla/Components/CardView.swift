@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CardView: View {
     @Environment(\.accessibilityDifferentiateWithoutColor) var accessibilityDifferentiateWithoutColor
+    @Environment(\.accessibilityVoiceOverEnabled) var accessibilityVoiceOverEnabled
     @State private var isShowingAnswer = false
     @State private var offset = CGSize.zero
     let card: Card
@@ -33,13 +34,22 @@ struct CardView: View {
                 .shadow(radius: 10)
 
             VStack {
-                Text(card.prompt)
-                    .font(.largeTitle)
-                    .foregroundStyle(.black)
-                if isShowingAnswer {
-                    Text(card.answer)
-                        .font(.title)
-                        .foregroundStyle(.secondary)
+                VStack {
+                    if accessibilityVoiceOverEnabled {
+                        Text(isShowingAnswer ? card.answer : card.prompt)
+                            .font(.largeTitle)
+                            .foregroundStyle(.black)
+                    } else {
+                        Text(card.prompt)
+                            .font(.largeTitle)
+                            .foregroundStyle(.black)
+
+                        if isShowingAnswer {
+                            Text(card.answer)
+                                .font(.title)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
             }
             .padding(20)
@@ -65,6 +75,8 @@ struct CardView: View {
         .onTapGesture {
             isShowingAnswer.toggle()
         }
+        .animation(.bouncy, value: offset)
+        .accessibilityAddTraits(.isButton)
     }
 }
 
