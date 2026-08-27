@@ -14,8 +14,9 @@ struct ContentView: View {
     var accessibilityEnabled : Bool { accessibilityVoiceOverEnabled || accessibilityDifferentiateWithoutColor }
     @Environment(\.scenePhase) var scenePhase
     @State private var isActive = true
-    @State private var cards = Array<Card>(repeating: .example, count: 10)
+    @State private var cards: [Card] = []
     @State private var timeRemaining = 100
+    @State private var showingEditScreen = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -53,6 +54,25 @@ struct ContentView: View {
                 }
                 .allowsHitTesting(timeRemaining > 0)
             }
+            VStack {
+                HStack {
+                    Spacer()
+
+                    Button {
+                        showingEditScreen = true
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .padding()
+                            .background(.black.opacity(0.7))
+                            .clipShape(.circle)
+                    }
+                }
+
+                Spacer()
+            }
+            .foregroundStyle(.white)
+            .font(.largeTitle)
+            .padding()
             if accessibilityEnabled {
                 VStack {
                     Spacer()
@@ -101,6 +121,10 @@ struct ContentView: View {
         .onChange(of: scenePhase) {
             isActive = scenePhase == .active && !cards.isEmpty
         }
+        .sheet(isPresented: $showingEditScreen, onDismiss: resetCards) {
+            EditCards()
+        }
+        .onAppear(perform: resetCards)
     }
 
     func removeCard(at index: Int) {
@@ -112,9 +136,17 @@ struct ContentView: View {
     }
 
     func resetCards() {
-        cards = Array<Card>(repeating: .example, count: 10)
         timeRemaining = 100
         isActive = true
+        loadData()
+    }
+
+    func loadData() {
+        if let data = UserDefaults.standard.data(forKey: "Cards") {
+            if let decoded = try? JSONDecoder().decode([Card].self, from: data) {
+                cards = decoded
+            }
+        }
     }
 }
 
