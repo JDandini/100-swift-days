@@ -8,28 +8,32 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedUser: User? = nil
-    @State private var isShowingUser = false
-    var body: some View {
-        Button("Tap Me") {
-            selectedUser = User()
-            isShowingUser = true
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
+        var body: some View {
+            if horizontalSizeClass == .compact {
+                VStack {
+                    UserView()
+                }
+            } else {
+                HStack {
+                    UserView()
+                }
+            }
         }
-//        .alert("Welcome", isPresented: $isShowingUser, presenting: selectedUser) { user in
-//            Button(user.id) { }
-//        }
-        .sheet(item: $selectedUser) { user in
-            Text(user.id)
-                .presentationDetents([.medium, .large])
-        }
-    }
 }
 
 #Preview {
     ContentView()
 }
 
-
-struct User: Identifiable {
-    var id = "Taylor Swift"
+struct UserView: View {
+    var body: some View {
+        Group {
+            Text("Name: Paul")
+            Text("Country: England")
+            Text("Pets: Luna and Arya")
+        }
+        .font(.title)
+    }
 }
